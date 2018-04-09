@@ -1,0 +1,29 @@
+# Compiled class file
+*.class
+target/
+/bin/
+
+# Log file
+*.log
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+derby.log
+artifact
+*.versionsBackup
+
+# virtual machine crash logs
+hs_err_pid*
+
+# IntelliJ
+*.idea/
+*.iml
+*.DS_Store
+
+# Maven
+dependency-reduced-pom.xml
