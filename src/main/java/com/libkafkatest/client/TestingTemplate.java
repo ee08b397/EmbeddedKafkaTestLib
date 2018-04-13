@@ -1,5 +1,8 @@
-package com.libkafkatest;
+package com.libkafkatest.client;
 
+import com.libkafkatest.config.KafkaSetup;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
@@ -7,6 +10,8 @@ import org.springframework.kafka.listener.MessageListenerContainer;
 import org.springframework.kafka.test.rule.KafkaEmbedded;
 import org.springframework.kafka.test.utils.ContainerTestUtils;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collection;
 import java.util.Map;
@@ -17,26 +22,29 @@ import java.util.Optional;
  *
  * @author sozhang
  */
-public class TestingTemplate {
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@DirtiesContext
+public class TestingTemplate<K, V> {
 
-    private KafkaTemplate<String, String> kafkaTemplate;
-
-    public TestingTemplate(final KafkaEmbedded embeddedKafka, final Optional<String> defaultTopic) throws Exception {
-        constructTestingProducer(embeddedKafka, defaultTopic);
-    }
+    private KafkaTemplate<K, V> kafkaTemplate;
 
     public TestingTemplate(final KafkaEmbedded embeddedKafka) throws Exception {
         constructTestingProducer(embeddedKafka, Optional.empty());
     }
 
+    public TestingTemplate(final KafkaEmbedded embeddedKafka, final Optional<String> defaultTopic) throws Exception {
+        constructTestingProducer(embeddedKafka, defaultTopic);
+    }
+
     private void constructTestingProducer(final KafkaEmbedded embeddedKafka, final Optional<String> defaultTopic)
             throws Exception {
 
-        // Set up the Kafka producer properties. Additional properties in KafkaSetup.
-        final Map<String, Object> senderProperties = KafkaTestUtils.senderProps(embeddedKafka.getBrokersAsString());
+        // Set up the Kafka producer properties. Additional properties in com.bfm.libkafkatest.KafkaSetup.
+        final Map<String, Object> props = KafkaTestUtils.senderProps(embeddedKafka.getBrokersAsString());
 
         // Create a Kafka producer factory.
-        final ProducerFactory<String, String> producerFactory = new DefaultKafkaProducerFactory<>(senderProperties);
+        final ProducerFactory<K, V> producerFactory = new DefaultKafkaProducerFactory<>(props);
 
         // Create a Kafka template.
         kafkaTemplate = new KafkaTemplate<>(producerFactory);
@@ -58,7 +66,7 @@ public class TestingTemplate {
      *
      * @return kafka broker to use between producer and consumer
      */
-    public KafkaTemplate<String, String> getKafkaTemplate() {
+    public KafkaTemplate<K, V> getKafkaTemplate() {
         return kafkaTemplate;
     }
 

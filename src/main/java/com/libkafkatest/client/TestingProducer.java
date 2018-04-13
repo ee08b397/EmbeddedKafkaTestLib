@@ -1,10 +1,16 @@
-package com.libkafkatest;
+package com.libkafkatest.client;
 
+import com.libkafkatest.config.KafkaSetup;
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.listener.MessageListenerContainer;
 import org.springframework.kafka.test.rule.KafkaEmbedded;
 import org.springframework.kafka.test.utils.ContainerTestUtils;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collection;
 import java.util.Map;
@@ -14,16 +20,19 @@ import java.util.Map;
  *
  * @author sozhang
  */
-public class TestingProducer {
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@DirtiesContext
+public class TestingProducer<K, V> {
 
-    private KafkaProducer<String, String> producer;
+    private Producer<K, V> producer;
 
     public TestingProducer(final KafkaEmbedded embeddedKafka) throws Exception {
-        // Set up the Kafka producer properties. Additional properties in KafkaSetup.
-        Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
+        // Set up the Kafka producer properties. Additional properties in com.bfm.libkafkatest.KafkaSetup.
+        final Map<String, Object> props = KafkaTestUtils.producerProps(embeddedKafka);
 
         // Create a Kafka producer
-        producer = new KafkaProducer<>(senderProps);
+        producer = new KafkaProducer<>(props);
 
         // Wait until the partitions are assigned.
         final Collection<MessageListenerContainer> listenerContainers = KafkaSetup.kafkaListenerEndpointRegistry
@@ -34,7 +43,7 @@ public class TestingProducer {
         }
     }
 
-    public KafkaProducer<String, String> getProducer() {
+    public Producer<K, V> getProducer() {
         return producer;
     }
 

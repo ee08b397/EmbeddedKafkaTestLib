@@ -1,5 +1,6 @@
-package com.libkafkatest;
+package com.libkafkatest.client;
 
+import com.libkafkatest.config.KafkaConstants;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -27,21 +28,29 @@ import java.util.concurrent.LinkedBlockingQueue;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @DirtiesContext
-public class TestingContainer {
+public class TestingContainer<K, V> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TestingContainer.class);
 
-    private KafkaMessageListenerContainer<String, String> container;
+    private KafkaMessageListenerContainer<K, V> container;
 
-    private BlockingQueue<ConsumerRecord<String, String>> records;
+    private BlockingQueue<ConsumerRecord<K, V>> records;
+
+    public TestingContainer(final KafkaEmbedded embeddedKafka) throws Exception {
+        constructTestingContainer(embeddedKafka, new String[]{});
+    }
 
     public TestingContainer(final KafkaEmbedded embeddedKafka, final String... topics) throws Exception {
-        // Set up the Kafka consumer properties. Additional properties in KafkaSetup.
+        constructTestingContainer(embeddedKafka, topics);
+    }
+
+    private void constructTestingContainer(final KafkaEmbedded embeddedKafka, final String[] topics) throws Exception {
+        // Set up the Kafka consumer properties. Additional properties in com.bfm.libkafkatest.KafkaSetup.
         final Map<String, Object> consumerProperties = KafkaTestUtils.consumerProps(
                 KafkaConstants.GROUP_ID, "false", embeddedKafka);
 
         // Create a Kafka consumer factory.
-        final DefaultKafkaConsumerFactory<String, String> consumerFactory =
+        final DefaultKafkaConsumerFactory<K, V> consumerFactory =
                 new DefaultKafkaConsumerFactory<>(consumerProperties);
 
         // Set the topic that needs to be consumed.
@@ -54,7 +63,7 @@ public class TestingContainer {
         records = new LinkedBlockingQueue<>();
 
         // Setup a Kafka message listener.
-        container.setupMessageListener((MessageListener<String, String>) record -> {
+        container.setupMessageListener((MessageListener<K, V>) record -> {
             LOGGER.debug("test-listener received message='{}'", record.toString());
             records.add(record);
         });
@@ -73,7 +82,11 @@ public class TestingContainer {
         this.container.stop();
     }
 
-    public BlockingQueue<ConsumerRecord<String, String>> getRecords() {
+    public KafkaMessageListenerContainer<K, V> getContainer() {
+        return container;
+    }
+
+    public BlockingQueue<ConsumerRecord<K, V>> getRecords() {
         return records;
     }
 

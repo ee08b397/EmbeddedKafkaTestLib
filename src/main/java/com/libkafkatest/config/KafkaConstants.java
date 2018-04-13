@@ -1,4 +1,4 @@
-package com.libkafkatest;
+package com.libkafkatest.config;
 
 import org.springframework.kafka.test.rule.KafkaEmbedded;
 
@@ -14,8 +14,9 @@ public class KafkaConstants {
      * spring.embedded.kafka.brokers is set to the address of the Kafka broker(s).
      * Convenient constants KafkaEmbedded.SPRING_EMBEDDED_KAFKA_BROKERS is provided for this property.
      */
-    final static String BOOTSTRAP_SERVERS = System.getProperty("KafkaTestingBootstrapServers", KafkaEmbedded.SPRING_EMBEDDED_KAFKA_BROKERS);
+    public final static String BOOTSTRAP_SERVERS = System.getProperty("KafkaTestingBootstrapServers",
+            KafkaEmbedded.SPRING_EMBEDDED_KAFKA_BROKERS);
 
-    final static String GROUP_ID = System.getProperty("KafkaTestingGroupID", "GroupID");
+    public final static String GROUP_ID = System.getProperty("KafkaTestingGroupID", "GroupID");
 
 }

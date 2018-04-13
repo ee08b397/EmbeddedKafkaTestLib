@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <logger name="org.apache.zookeeper" level="WARN"/>
+    <logger name="org.I0Itec.zkclient" level="WARN"/>
+    <logger name="org.apache.kafka.clients" level="ERROR"/>
+    <logger name="o.a.z" level="WARN"/>
+    <logger name="o.a.kafka.common.utils" level="WARN"/>
+</configuration>
