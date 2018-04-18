@@ -1,5 +1,6 @@
 package com.libkafkatest;
 
+import com.libkafkatest.api.KafkaTest;
 import com.libkafkatest.client.TestingContainer;
 import com.libkafkatest.impl.KafkaTestImpl;
 import org.apache.kafka.clients.consumer.Consumer;
@@ -35,7 +36,7 @@ public class SampleTest {
 
     @Test
     public void testProducerConsumer() throws Exception {
-        final KafkaTestImpl<String, String> kafkaTest = new KafkaTestImpl<>();
+        final KafkaTest<String, String> kafkaTest = new KafkaTestImpl<>();
         final Producer<String, String> producer = kafkaTest.getProducer(embeddedKafka);
         final Consumer<String, String> consumer = kafkaTest.getConsumer(embeddedKafka,
                 Collections.singletonList(sampleTopic));
@@ -73,7 +74,7 @@ public class SampleTest {
 
     @Test
     public void testProducerContainer() throws Exception {
-        final KafkaTestImpl<Integer, String> kafkaTest = new KafkaTestImpl<>();
+        final KafkaTest<Integer, String> kafkaTest = new KafkaTestImpl<>();
         final Producer<Integer, String> producer = kafkaTest.getProducer(embeddedKafka);
         final TestingContainer<Integer, String> testingContainer = new TestingContainer<>(embeddedKafka, sampleTopic);
 
@@ -90,7 +91,7 @@ public class SampleTest {
 
     @Test
     public void testTemplateConsumer() throws Exception {
-        final KafkaTestImpl<Integer, String> kafkaTest = new KafkaTestImpl<>();
+        final KafkaTest<Integer, String> kafkaTest = new KafkaTestImpl<>();
         final KafkaTemplate<Integer, String> kafkaTemplate = kafkaTest.getTemplate(embeddedKafka, Optional.of(sampleTopic));
         final Consumer<Integer, String> consumer = kafkaTest.getConsumer(embeddedKafka,
                 Collections.singletonList(sampleTopic));
@@ -129,7 +130,7 @@ public class SampleTest {
 
     @Test
     public void testTemplateContainer() throws Exception {
-        final KafkaTestImpl<String, String> kafkaTest = new KafkaTestImpl<>();
+        final KafkaTest<String, String> kafkaTest = new KafkaTestImpl<>();
         final KafkaTemplate<String, String> kafkaTemplate = kafkaTest.getTemplate(embeddedKafka, Optional.of(sampleTopic));
         final TestingContainer<String, String> testingContainer = new TestingContainer<>(embeddedKafka, sampleTopic);
 

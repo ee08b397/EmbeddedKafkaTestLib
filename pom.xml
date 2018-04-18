@@ -116,4 +116,15 @@
         </testResources>
     </build>
 
+    <scm>
+        <connection>scm:git@github.com:ee08b397/EmbeddedKafkaTestLib.git</connection>
+        <developerConnection>scm:git@github.com:ee08b397/EmbeddedKafkaTestLib.git</developerConnection>
+        <url>https://github.com/ee08b397/EmbeddedKafkaTestLib</url>
+    </scm>
+
+    <ciManagement>
+        <system>Travis</system>
+        <url>https://travis-ci.org/ee08b397/EmbeddedKafkaTestLib</url>
+    </ciManagement>
+
 </project>
